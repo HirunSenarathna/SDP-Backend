@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 
     @Autowired
@@ -29,14 +30,11 @@ public class AuthenticationController {
 
         try {
             Account account = accountService.login(email, password);
-            System.out.println(account);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("role", account.getRole());
-            System.out.println(account.getRole());
             return response;
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
     }

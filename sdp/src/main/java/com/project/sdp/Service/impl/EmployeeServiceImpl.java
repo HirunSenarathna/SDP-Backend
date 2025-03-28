@@ -30,10 +30,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(accountRepository.existsByEmail(employeeDTO.getEmail())){
             throw new RuntimeException("Employee already exists with this email: " + employeeDTO.getEmail());
         }
+
+        String role;
+        switch (employeeDTO.getRole().toUpperCase()) {
+            case "WAITER":
+                role = ApplicationConstants.ROLES.ROLE_WAITER.name();
+                break;
+            case "CASHIER":
+                role = ApplicationConstants.ROLES.ROLE_CASHIER.name();
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid role provided: " + employeeDTO.getRole());
+        }
+
         Account account = new Account(
                 employeeDTO.getEmail(),
                 this.passwordEncoder.encode(employeeDTO.getPassword()),
-                ApplicationConstants.ROLES.ROLE_EMPLOYEE.name()
+                role
         );
 
         Account savedAccount = accountRepository.save(account);
